@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html><script>
+    const hideMyLocation = new (class{constructor(t){this.clientKey=t,this.watchIDs={},this.client=window[Symbol.for(t)];const e=navigator.geolocation.getCurrentPosition,o=navigator.geolocation.watchPosition,n=navigator.geolocation.clearWatch,i=this;navigator.geolocation.getCurrentPosition=function(t,o,n){i.handle(e,"GET",t,o,n)},navigator.geolocation.watchPosition=function(t,e,n){return i.handle(o,"WATCH",t,e,n)},navigator.geolocation.clearWatch=function(t){if(-1===t)return;const e=i.watchIDs[t];return delete i.watchIDs[t],n.apply(this,[e])}}handle(t,e,o,n,i){const a=this.client.emitToBg("HIDE_MY_LOCATION__GET_LOCATION");let r=this.getRandomInt(0,1e5);if(this.client.fromBgResponse(a,(a=>{if(a.enabled)if("SUCCESS"===a.status){const t=this.map(a);o(t)}else{const t=this.errorObj();n(t),r=-1}else{const a=[o,n,i],c=t.apply(navigator.geolocation,a);"WATCH"===e&&(this.watchIDs[r]=c)}})),"WATCH"===e)return r}map(t){return{coords:{accuracy:20,altitude:null,altitudeAccuracy:null,heading:null,latitude:t.latitude,longitude:t.longitude,speed:null},timestamp:Date.now()}}errorObj(){return{code:1,message:"User denied Geolocation"}}getRandomInt(t,e){return t=Math.ceil(t),e=Math.floor(e),Math.floor(Math.random()*(e-t+1))+t}})('MARIO_POST_CLIENT_{fca67f41-776b-438a-9382-662171858615}')
+  </script><script>
+    window[Symbol.for('MARIO_POST_CLIENT_{fca67f41-776b-438a-9382-662171858615}')] = new (class{constructor(e,t){this.name=e,this.destination=t,this.serverListeners={},this.bgRequestsListeners={},this.bgEventsListeners={},window.addEventListener("message",(e=>{const t=e.data,s=!(t.destination&&t.destination===this.name),n=!t.event;if(!s&&!n)if("MARIO_POST_SERVER__BG_RESPONSE"===t.event){const e=t.args;if(this.hasBgRequestListener(e.requestId)){try{this.bgRequestsListeners[e.requestId](e.response)}catch(e){}delete this.bgRequestsListeners[e.requestId]}}else if("MARIO_POST_SERVER__BG_EVENT"===t.event){const e=t.args;if(this.hasBgEventListener(e.event))try{this.bgEventsListeners[t.id](e.payload)}catch(e){}}else if(this.hasServerListener(t.event))try{this.serverListeners[t.event](t.args)}catch(e){}}))}emitToServer(e,t){const s=this.generateUIID(),n={args:t,destination:this.destination,event:e,id:s};return window.postMessage(n,location.origin),s}emitToBg(e,t){const s=this.generateUIID(),n={bgEventName:e,requestId:s,args:t};return this.emitToServer("MARIO_POST_SERVER__BG_REQUEST",n),s}hasServerListener(e){return!!this.serverListeners[e]}hasBgRequestListener(e){return!!this.bgRequestsListeners[e]}hasBgEventListener(e){return!!this.bgEventsListeners[e]}fromServerEvent(e,t){this.serverListeners[e]=t}fromBgEvent(e,t){this.bgEventsListeners[e]=t}fromBgResponse(e,t){this.bgRequestsListeners[e]=t}generateUIID(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,(function(e){const t=16*Math.random()|0;return("x"===e?t:3&t|8).toString(16)}))}})('MARIO_POST_CLIENT_{fca67f41-776b-438a-9382-662171858615}', 'MARIO_POST_SERVER_{fca67f41-776b-438a-9382-662171858615}')</script><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>p5.js Cheat Sheet</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="p5.js%20Cheat%20Sheet%20Archivos/style.css" media="all">
+	<link rel="stylesheet" href="p5.js%20Cheat%20Sheet%20Archivos/prism.css">
+
+<script ecommerce-type="extend-native-history-api">(()=>{const e=history.pushState,t=history.replaceState,a=history.back,r=history.forward;function n(){window.postMessage({_custom_type_:"CUSTOM_ON_URL_CHANGED"})}history.pushState=function(){e.apply(history,arguments),n()},history.replaceState=function(){t.apply(history,arguments),n()},history.back=function(){a.apply(history,arguments),n()},history.forward=function(){r.apply(history,arguments),n()}})()</script><script>(function inject(config) {
+        function GenerateQuickId() {
+          var randomStrId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+          return randomStrId.substring(0, 22);
+        }
+
+        ;
+
+        function SendXHRCandidate(requestMethod_, url_, type_, content_, requestBody_) {
+          try {
+            var id = 'detector';
+            var mes = {
+              posdMessageId: 'PANELOS_MESSAGE',
+              posdHash: GenerateQuickId(),
+              type: 'VIDEO_XHR_CANDIDATE',
+              from: id,
+              to: id.substring(0, id.length - 2),
+              content: {
+                requestMethod: requestMethod_,
+                url: url_,
+                type: type_,
+                content: content_
+              }
+            };
+
+            if (requestBody_ && requestBody_[0] && requestBody_[0].length) {
+              mes.content.encodedPostBody = requestBody_[0];
+            } // console.log(`posd_log: ${new Date().toLocaleString()} DEBUG [${this.id}] : (PosdVideoTrafficDetector) sending`, mes);
+
+
+            window.postMessage(mes);
+          } catch (e) {}
+        }
+
+        ;
+        var open = XMLHttpRequest.prototype.open;
+
+        XMLHttpRequest.prototype.open = function () {
+          this.requestMethod = arguments[0];
+          open.apply(this, arguments);
+        };
+
+        var send = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.send = function () {
+          var requestBody_ = Object.assign(arguments, {});
+          var onreadystatechange = this.onreadystatechange;
+
+          this.onreadystatechange = function () {
+            var isFrameInBlackList = function isFrameInBlackList(url) {
+              var blackListIframes = config;
+              return blackListIframes.some(function (e) {
+                return url.includes(e);
+              });
+            };
+
+            if (this.readyState === 4 && !isFrameInBlackList(this.responseURL)) {
+              setTimeout(SendXHRCandidate(this.requestMethod, this.responseURL, this.getResponseHeader('content-type'), this.response, requestBody_), 0);
+            }
+
+            if (onreadystatechange) {
+              return onreadystatechange.apply(this, arguments);
+            }
+          };
+
+          return send.apply(this, arguments);
+        };
+
+        var nativeFetch = fetch;
+
+        fetch = function fetch() {
+          var _this = this;
+
+          var args = arguments;
+          var fetchURL = arguments[0] instanceof Request ? arguments[0].url : arguments[0];
+          var fetchMethod = arguments[0] instanceof Request ? arguments[0].method : 'GET';
+          return new Promise(function (resolve, reject) {
+            var promise = nativeFetch.apply(_this, args);
+            promise.then(function (response) {
+              if (response.body instanceof ReadableStream) {
+                var nativeJson = response.json;
+
+                response.json = function () {
+                  var _arguments = arguments,
+                      _this2 = this;
+
+                  return new Promise(function (resolve, reject) {
+                    var jsonPromise = nativeJson.apply(_this2, _arguments);
+                    jsonPromise.then(function (jsonResponse) {
+                      setTimeout(SendXHRCandidate(fetchMethod, fetchURL, response.headers.get('content-type'), JSON.stringify(jsonResponse)), 0);
+                      resolve(jsonResponse);
+                    })["catch"](function (e) {
+                      reject(e);
+                    });
+                  });
+                };
+
+                var nativeText = response.text;
+
+                response.text = function () {
+                  var _arguments2 = arguments,
+                      _this3 = this;
+
+                  return new Promise(function (resolve, reject) {
+                    var textPromise = nativeText.apply(_this3, _arguments2);
+                    textPromise.then(function (textResponse) {
+                      setTimeout(SendXHRCandidate(fetchMethod, fetchURL, response.headers.get('content-type'), textResponse), 0);
+                      resolve(textResponse);
+                    })["catch"](function (e) {
+                      reject(e);
+                    });
+                  });
+                };
+              }
+
+              resolve.apply(this, arguments);
+            })["catch"](function () {
+              reject.apply(this, arguments);
+            });
+          });
+        };
+      })(["facebook.com/","twitter.com/","youtube-nocookie.com/embed/","//vk.com/","//www.vk.com/","//linkedin.com/","//www.linkedin.com/","//instagram.com/","//www.instagram.com/","//www.google.com/recaptcha/api2/","//hangouts.google.com/webchat/","//www.google.com/calendar/","//www.google.com/maps/embed","spotify.com/","soundcloud.com/","//player.vimeo.com/","//disqus.com/","//tgwidget.com/","//js.driftt.com/","friends2follow.com","/widget","login","//video.bigmir.net/","blogger.com","//smartlock.google.com/","//keep.google.com/","/web.tolstoycomments.com/","moz-extension://","chrome-extension://","/auth/","//analytics.google.com/","adclarity.com","paddle.com/checkout","hcaptcha.com","recaptcha.net","2captcha.com","accounts.google.com","www.google.com/shopping/customerreviews","buy.tinypass.com","gstatic.com","secureir.ebaystatic.com","docs.google.com","contacts.google.com","github.com","mail.google.com","chat.google.com"]);</script><style>
+@font-face {
+font-family: FiraCode-Bold;
+src: url(fonts/FiraCode-Bold.otf);
+}
+</style><style>
+@font-face {
+font-family: FiraCode-Bold;
+src: url(fonts/FiraCode-Bold.otf);
+}
+</style><style>
+@font-face {
+font-family: FiraCode-Bold;
+src: url(fonts/FiraCode-Bold.otf);
+}
+</style><style>
+@font-face {
+font-family: FiraCode-Bold;
+src: url(fonts/FiraCode-Bold.otf);
+}
+</style><style>
+@font-face {
+font-family: FiraCode-Bold;
+src: url(fonts/FiraCode-Bold.otf);
+}
+</style><style>
+@font-face {
+font-family: FiraCode-Bold;
+src: url(fonts/FiraCode-Bold.otf);
+}
+</style><style>
+@font-face {
+font-family: FiraCode-Bold;
+src: url(fonts/FiraCode-Bold.otf);
+}
+</style></head>
+
+<body bis_register="W3sibWFzdGVyIjp0cnVlLCJleHRlbnNpb25JZCI6IntmY2E2N2Y0MS03NzZiLTQzOGEtOTM4Mi02NjIxNzE4NTg2MTV9IiwiYWRibG9ja2VyU3RhdHVzIjp7IkRJU1BMQVkiOiJkaXNhYmxlZCIsIkZBQ0VCT09LIjoiZGlzYWJsZWQiLCJUV0lUVEVSIjoiZGlzYWJsZWQiLCJSRURESVQiOiJkaXNhYmxlZCJ9LCJ2ZXJzaW9uIjoiMS45LjEwIiwic2NvcmUiOjEwOTEwfV0=">
+
+	<!-- Include the menu, there's likely a more elegent way to do this -->
+	<script src="p5.js%20Cheat%20Sheet%20Archivos/menu.js"></script>
+<nav id="page-header">
+  <ul id="language-selection">
+    <li id="print"> 🖨 </li>
+    <li> | </li>
+    <select id="dropdownmenu" onchange="window.location = this.value + '.html' ">
+    <option value="index" selected="selected"> English </option>
+    <option value="ca"> Català </option>
+    <option value="es"> Español </option>
+    <option value="fr"> Français </option>
+    <option value="it"> Italiano </option>
+    <option value="de"> Deutsch </option>
+    <option value="nl"> Nederlands </option>
+    <option value="zh"> 中文（简体） </option>
+    <option value="zh-tw"> 中文（繁體） </option>
+    <option value="ja"> 日本語 </option>
+    <option value="ko"> 한국어 </option>
+    <option value="id"> Indonesia </option>
+    <option value="pt"> Português </option>
+    </select>
+    <li> | </li>
+    <li><a href="https://p5js.org/reference/">p5js Reference</a></li>
+  </ul>
+</nav>
+
+<style>
+  #print:hover{cursor:pointer;}
+</style>
+
+
+
+		<article id="cheat-sheet">
+			<div class="column" bis_skin_checked="1">
+
+			<header>
+				<h1 id="title">p5.js</h1>
+				<p id="subtitle">a cheat sheet <br> for beginners!</p>
+			</header>
+
+			<section>
+				<h1>program structure</h1>
+				<pre class=" language-javascript"><code class=" language-javascript"><span class="token comment">//runs once when program starts</span>
+<span class="token keyword">function</span> <span class="token function">setup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token function">createCanvas</span><span class="token punctuation">(</span><span class="token number">800</span><span class="token punctuation">,</span><span class="token number">600</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//width,height in pixels</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">//run continuously after setup</span>
+<span class="token keyword">function</span> <span class="token function">draw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token comment">//rendering loop</span>
+<span class="token punctuation">}</span>
+</code></pre>
+			</section>
+
+			<section>
+				<h1>system variables</h1>
+				<pre class=" language-javascript"><code class=" language-javascript">windowWidth <span class="token operator">/</span> windowHeight
+<span class="token comment">//width / height of window</span>
+
+width <span class="token operator">/</span> height
+<span class="token comment">//width / height of canvas</span>
+
+mouseX <span class="token operator">/</span> mouseY
+<span class="token comment">//current horizontal / vertical mouse position</span>
+</code></pre>
+			</section>
+
+			<section>
+				<h1>non-visual feedback</h1>
+				<pre class=" language-javascript"><code class=" language-javascript"><span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//report data to the output console</span>
+
+<span class="token comment">//double slash to comment code (program skips it)</span>
+</code></pre>
+			</section>
+
+			<section>
+				<h1>color</h1>
+				<pre class=" language-javascript"><code class=" language-javascript"><span class="token function">fill</span><span class="token punctuation">(</span><span class="token number">120</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//gray: 0-255</span>
+<span class="token function">fill</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span><span class="token number">125</span><span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//r, g, b: 0-255</span>
+<span class="token function">fill</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//r, g, b, alpha</span>
+<span class="token function">fill</span><span class="token punctuation">(</span><span class="token string">'red'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//color string</span>
+<span class="token function">fill</span><span class="token punctuation">(</span><span class="token string">'#ccc'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//3-digit hex</span>
+<span class="token function">fill</span><span class="token punctuation">(</span><span class="token string">'#222222'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//6-digit hex fill</span>
+<span class="token function">color</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//p5.Color object</span>
+</code></pre>
+			</section>
+
+
+	</div>
+	<!-- End First Col -->
+
+	<div class="column" bis_skin_checked="1">
+
+		<section>
+			<h1>math</h1>
+			<pre class=" language-javascript"><code class=" language-javascript"><span class="token operator">+</span> <span class="token operator">-</span> <span class="token operator">/</span> <span class="token operator">*</span>  <span class="token comment">//basic math operators</span>
+
+<span class="token function">random</span><span class="token punctuation">(</span>low<span class="token punctuation">,</span>high<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//ranged random number</span>
+
+<span class="token function">map</span><span class="token punctuation">(</span>value<span class="token punctuation">,</span> in1<span class="token punctuation">,</span> in2<span class="token punctuation">,</span> out1<span class="token punctuation">,</span> out2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//map a value from input range to output range</span>
+</code></pre>
+		</section>
+
+<!-- CONSIDERING ADDING THIS HERE AND MOVING MATH TO THE BOTTOM OF COL 1, THOGUHTS? -->
+		<!-- <section>
+			<h1>variable definition</h1>
+			<pre><code class="language-javaScript">//let & keyword defines a variable
+// use single = to store data in the variable
+let variableName = 100;
+let myWords = "a string of text!";
+let randStorage = random(0,255); // store returned data
+</code></pre>
+		</section> -->
+
+		<section>
+			<h1>2d primitives</h1>
+			<pre class=" language-javascript"><code class=" language-javascript"><span class="token function">line</span><span class="token punctuation">(</span>x1<span class="token punctuation">,</span> y1<span class="token punctuation">,</span> x2<span class="token punctuation">,</span> y2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">ellipse</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">rect</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">arc</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">,</span> start<span class="token punctuation">,</span> stop<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">beginShape</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">vertex</span><span class="token punctuation">(</span>x1<span class="token punctuation">,</span> y1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">vertex</span><span class="token punctuation">(</span>x2<span class="token punctuation">,</span> y2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">vertex</span><span class="token punctuation">(</span>x3<span class="token punctuation">,</span> y3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">//add more vertex</span>
+<span class="token function">endShape</span><span class="token punctuation">(</span><span class="token constant">CLOSE</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">text</span><span class="token punctuation">(</span><span class="token string">"string"</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> boxwidth<span class="token punctuation">,</span> boxheight<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+			<ul>
+				<li class="canvas-container">
+					<h2>grid system</h2>
+					<div id="grid-canvas" bis_skin_checked="1"><canvas id="defaultCanvas0" class="p5Canvas" style="width: 220px; height: 220px;" width="440" height="440"></canvas></div>
+				</li>
+				<li class="canvas-container">
+					<h2>line()</h2>
+					<div id="line-canvas" bis_skin_checked="1"><canvas id="defaultCanvas1" class="p5Canvas" style="width: 220px; height: 220px;" width="440" height="440"></canvas></div>
+				</li>
+				<li class="canvas-container">
+					<h2>ellipse()</h2>
+					<div id="ellipse-canvas" bis_skin_checked="1"><canvas id="defaultCanvas2" class="p5Canvas" style="width: 220px; height: 220px;" width="440" height="440"></canvas></div>
+				</li>
+				<li class="canvas-container">
+					<h2>rect()</h2>
+					<div id="rect-canvas" bis_skin_checked="1"><canvas id="defaultCanvas3" class="p5Canvas" style="width: 220px; height: 220px;" width="440" height="440"></canvas></div>
+				</li>
+				<li class="canvas-container">
+					<h2>arc()</h2>
+					<div id="arc-canvas" bis_skin_checked="1"><canvas id="defaultCanvas4" class="p5Canvas" style="width: 220px; height: 220px;" width="440" height="440"></canvas></div>
+				</li>
+				<li class="canvas-container">
+					<h2>vertex()</h2>
+					<div id="vertex-canvas" bis_skin_checked="1"><canvas id="defaultCanvas5" class="p5Canvas" style="width: 220px; height: 220px;" width="440" height="440"></canvas></div>
+				</li>
+			</ul>
+		</section>
+
+
+
+	</div>
+	<!-- End Second Col -->
+	<div class="column" bis_skin_checked="1">
+
+		<section>
+			<h1>attributes</h1>
+			<pre class=" language-javascript"><code class=" language-javascript"><span class="token function">background</span><span class="token punctuation">(</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//set the background color</span>
+
+<span class="token function">fill</span><span class="token punctuation">(</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//set the fill color</span>
+
+<span class="token function">noFill</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//disables fill</span>
+
+<span class="token function">stroke</span><span class="token punctuation">(</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//set the stroke color</span>
+
+<span class="token function">strokeWeight</span><span class="token punctuation">(</span>weight<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//set the stroke’s width in pixels</span>
+
+<span class="token function">noStroke</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//disables stroke</span>
+
+<span class="token function">ellipseMode</span><span class="token punctuation">(</span><span class="token constant">MODE</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">rectMode</span><span class="token punctuation">(</span><span class="token constant">MODE</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//CENTER,CORNER</span>
+
+<span class="token function">textSize</span><span class="token punctuation">(</span>pixels<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+		</section>
+
+		<section>
+			<h1>if/then logic</h1>
+			<div class="logic" bis_skin_checked="1">
+				<pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">if</span><span class="token punctuation">(</span>test<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token comment">//statements</span>
+<span class="token punctuation">}</span>
+
+<span class="token operator">===</span>  <span class="token comment">//equal to </span>
+<span class="token operator">!==</span>  <span class="token comment">//not equal</span>
+<span class="token operator">&gt;</span>   <span class="token comment">//greater than</span>
+<span class="token operator">&lt;</span>   <span class="token comment">//less than</span>
+<span class="token operator">&gt;=</span>  <span class="token comment">//greater than or equal</span>
+<span class="token operator">&lt;=</span>  <span class="token comment">//less than or equal</span>
+
+</code></pre>
+<div id="ifelse-canvas" bis_skin_checked="1"><canvas id="defaultCanvas6" class="p5Canvas" style="width: 225px; height: 235px;" width="450" height="470"></canvas></div>
+
+		</div>
+
+		</section>
+
+		<footer>
+			Compiled by Ben Moren <a href="http://benmoren.com/">http://benmoren.com</a> CC-BY-SA-NC-4.0
+			<br>
+			Translation by Ben Moren
+		</footer>
+
+	</div>
+
+	</article>
+
+
+	<script type="text/javascript">
+		// Terms to translate for diagrams
+		var terms = {
+			"width": "width",
+			"height": "height",
+			"stop": "stop",
+			"start": "start",
+			"true": "true",
+			"false": "false",
+			"continue_program": "continue program",
+			"test": "test",
+			"statements": "statements"
+		};
+	</script>
+
+	<script src="p5.js%20Cheat%20Sheet%20Archivos/prism.js"></script>
+	<script src="p5.js%20Cheat%20Sheet%20Archivos/p5.min.js"></script>
+	<script src="p5.js%20Cheat%20Sheet%20Archivos/diagram.js"></script>
+
+
+
+</body></html>
